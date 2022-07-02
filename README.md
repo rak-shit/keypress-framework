@@ -1,46 +1,115 @@
-# Getting Started with Create React App
+# react-big-calendar
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A Keypress wrapper component which will register keyboard shortcuts to the component
+## Use and Setup
 
-## Available Scripts
+```sh
+$ git clone git@github.com:jquense/react-big-calendar.git
+$ cd react-big-calendar
+$ yarn
+$ yarn examples
+```
 
-In the project directory, you can run:
+- Open [localhost:3000/examples/index.html](http://localhost:3000/examples/index.html).
 
-### `npm start`
+### Localization and Date Formatting
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+`react-big-calendar` includes three options for handling the date formatting and culture localization, depending
+on your preference of DateTime libraries. You can use either the [Moment.js](https://momentjs.com/), [Globalize.js](https://github.com/jquery/globalize) or [date-fns](https://date-fns.org/) localizers.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Regardless of your choice, you **must** choose a localizer to use this library:
 
-### `npm test`
+#### Moment.js
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```js
+import { Calendar, momentLocalizer } from 'react-big-calendar'
+import moment from 'moment'
 
-### `npm run build`
+const localizer = momentLocalizer(moment)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+const MyCalendar = props => (
+  <div>
+    <Calendar
+      localizer={localizer}
+      events={myEventsList}
+      startAccessor="start"
+      endAccessor="end"
+      style={{ height: 500 }}
+    />
+  </div>
+)
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### Globalize.js v0.1.1
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```js
+import { Calendar, globalizeLocalizer } from 'react-big-calendar'
+import globalize from 'globalize'
 
-### `npm run eject`
+const localizer = globalizeLocalizer(globalize)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+const MyCalendar = props => (
+  <div>
+    <Calendar
+      localizer={localizer}
+      events={myEventsList}
+      startAccessor="start"
+      endAccessor="end"
+      style={{ height: 500 }}
+    />
+  </div>
+)
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### date-fns v2
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```js
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
+import format from 'date-fns/format'
+import parse from 'date-fns/parse'
+import startOfWeek from 'date-fns/startOfWeek'
+import getDay from 'date-fns/getDay'
+import enUS from 'date-fns/locale/en-US'
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+const locales = {
+  'en-US': enUS,
+}
 
-## Learn More
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales,
+})
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+const MyCalendar = props => (
+  <div>
+    <Calendar
+      localizer={localizer}
+      events={myEventsList}
+      startAccessor="start"
+      endAccessor="end"
+      style={{ height: 500 }}
+    />
+  </div>
+)
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Custom Styling
+
+Out of the box, you can include the compiled CSS files and be up and running. But, sometimes, you may want to style
+Big Calendar to match your application styling. For this reason, SASS files are included with Big Calendar.
+
+```
+  @import 'react-big-calendar/lib/sass/styles';
+  @import 'react-big-calendar/lib/addons/dragAndDrop/styles'; // if using DnD
+```
+
+SASS implementation provides a `variables` file containing color and sizing variables that you can
+update to fit your application. _Note:_ Changing and/or overriding styles can cause rendering issues with your
+Big Calendar. Carefully test each change accordingly.
+
+## Join us on Reactiflux Discord
+
+Join us on [Reactiflux Discord](https://discord.gg/reactiflux) community under the channel #libraries if you have any questions.
