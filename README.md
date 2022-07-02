@@ -4,112 +4,55 @@ A Keypress wrapper component which will register keyboard shortcuts to the compo
 ## Use and Setup
 
 ```sh
-$ git clone git@github.com:jquense/react-big-calendar.git
-$ cd react-big-calendar
-$ yarn
-$ yarn examples
+$ git clone git@github.com:jquense/keypress-framework.git
+$ cd keypress-framework
+$ npm install
+$ npm start
 ```
 
-- Open [localhost:3000/examples/index.html](http://localhost:3000/examples/index.html).
+- Open [localhost:3000/](http://localhost:3000/).
 
-### Localization and Date Formatting
+We use the `keypress.js` package from `npm` for this project. We build the framework around that package.
 
-`react-big-calendar` includes three options for handling the date formatting and culture localization, depending
-on your preference of DateTime libraries. You can use either the [Moment.js](https://momentjs.com/), [Globalize.js](https://github.com/jquery/globalize) or [date-fns](https://date-fns.org/) localizers.
+After the cloning the project you need to import the `Keypress.tsx` into the component you want to set the shortcut to.
 
-Regardless of your choice, you **must** choose a localizer to use this library:
-
-#### Moment.js
+#### Component.tsx
 
 ```js
-import { Calendar, momentLocalizer } from 'react-big-calendar'
-import moment from 'moment'
+import Keypress from './Keypress'
 
-const localizer = momentLocalizer(moment)
+function ComponentA() {
 
-const MyCalendar = props => (
-  <div>
-    <Calendar
-      localizer={localizer}
-      events={myEventsList}
-      startAccessor="start"
-      endAccessor="end"
-      style={{ height: 500 }}
-    />
-  </div>
-)
-```
+    function turnGreen() {
+        const componentA = document.getElementById('component-a')
+        if (componentA) {
+            componentA.style.backgroundColor = 'green'
+        }
+    }
 
-#### Globalize.js v0.1.1
-
-```js
-import { Calendar, globalizeLocalizer } from 'react-big-calendar'
-import globalize from 'globalize'
-
-const localizer = globalizeLocalizer(globalize)
-
-const MyCalendar = props => (
-  <div>
-    <Calendar
-      localizer={localizer}
-      events={myEventsList}
-      startAccessor="start"
-      endAccessor="end"
-      style={{ height: 500 }}
-    />
-  </div>
-)
-```
-
-#### date-fns v2
-
-```js
-import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
-import format from 'date-fns/format'
-import parse from 'date-fns/parse'
-import startOfWeek from 'date-fns/startOfWeek'
-import getDay from 'date-fns/getDay'
-import enUS from 'date-fns/locale/en-US'
-
-const locales = {
-  'en-US': enUS,
+    return (
+        <div id={'component-a'}>
+            Component A
+            <Keypress
+                shortcut='shift s'
+                description='I turn the component Green'
+                callbackFn={turnGreen}
+            />
+        </div>
+    )
 }
 
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
-})
-
-const MyCalendar = props => (
-  <div>
-    <Calendar
-      localizer={localizer}
-      events={myEventsList}
-      startAccessor="start"
-      endAccessor="end"
-      style={{ height: 500 }}
-    />
-  </div>
-)
+export default ComponentA
 ```
+You are also provided with the list of shortcuts mapped to the components they are registered to. You have a deregister button beside each shortcut which will unregister the shortcut with the component.
 
-## Custom Styling
+We also store the shortcuts mapped to their respective components in the redux store. This is how we show the list of shortcuts and their respective component.
 
-Out of the box, you can include the compiled CSS files and be up and running. But, sometimes, you may want to style
-Big Calendar to match your application styling. For this reason, SASS files are included with Big Calendar.
+## Packaging this as a library
 
-```
-  @import 'react-big-calendar/lib/sass/styles';
-  @import 'react-big-calendar/lib/addons/dragAndDrop/styles'; // if using DnD
-```
+For the sake of deregistering we had to use external code to store the shortcuts in the redux store but if we remove the deregister functionality we can simply package this as a `npm` library. 
 
-SASS implementation provides a `variables` file containing color and sizing variables that you can
-update to fit your application. _Note:_ Changing and/or overriding styles can cause rendering issues with your
-Big Calendar. Carefully test each change accordingly.
+We can use a `deregister` prop which will take a boolean value to deregister the shortcut.
 
-## Join us on Reactiflux Discord
+The next version of the library would include this.
 
-Join us on [Reactiflux Discord](https://discord.gg/reactiflux) community under the channel #libraries if you have any questions.
