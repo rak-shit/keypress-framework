@@ -1,4 +1,4 @@
-# react-big-calendar
+# React Key Press
 
 A Keypress wrapper component which will register keyboard shortcuts to the component
 ## Use and Setup
